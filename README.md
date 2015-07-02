@@ -8,7 +8,6 @@ MySQL installation
 
 Database Setup
 
-username=root password=pass
 
 Database name : INVENTORY_SYSTEM
 
