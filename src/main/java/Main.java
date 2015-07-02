@@ -9,7 +9,7 @@ public class Main {
     static final String DB_URL = "jdbc:mysql://localhost/INVENTORY_SYSTEM";
 
     public static void main(String[] args) {
-        UserInterface u = new UserInterface();
+        UserControl u = new UserControl();
         u.start();
     }
 }

@@ -8,7 +8,7 @@ import main.java.InvSys;
 /**
  * Created by rajan on 7/1/15.
  */
-public class UserInterface {
+public class UserControl {
 
     Scanner s;
     int invId;

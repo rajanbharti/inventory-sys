@@ -311,7 +311,5 @@ public class InvSys implements OrderManager, InventoryManager {
         } catch (SQLException e) {
             System.out.println("Enter correct values");
         }
-
     }
-
 }
