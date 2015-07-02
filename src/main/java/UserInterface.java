@@ -17,11 +17,12 @@ public class UserInterface {
     public void start() {
         inv1 = new InvSys();
         s = new Scanner(System.in);
-        System.out.println("Enter your inventory ID(default 1)");
-        invId = s.nextInt();
-        System.out.println("Enter 1 to manage inventory, 2 to manage Order,3 to exit ");
-        System.out.println("Add a new inventory, if you haven't added one");
         try {
+            System.out.println("Enter your inventory ID(default 1)");
+            invId = s.nextInt();
+            System.out.println("Enter 1 to manage inventory, 2 to manage Order,3 to exit ");
+            System.out.println("Add a new inventory, if you haven't added one");
+
             int choice = s.nextInt();
             switch (choice) {
                 case 1:
@@ -34,6 +35,7 @@ public class UserInterface {
                     break;
                 default:
                     start();
+                    break;
             }
         } catch (InputMismatchException e) {
             System.out.println("Enter number only");

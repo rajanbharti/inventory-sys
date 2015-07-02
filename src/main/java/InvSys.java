@@ -4,6 +4,7 @@ import main.java.InventoryManager;
 import main.java.OrderManager;
 
 import java.sql.*;
+import java.util.Scanner;
 
 /**
  * Created by rajan on 6/29/15.
@@ -17,8 +18,15 @@ public class InvSys implements OrderManager, InventoryManager {
     int orderID;
     Connection conn;
     PreparedStatement p1;
+    String userName;
+    String password;
 
     public InvSys() {
+        Scanner s=new Scanner(System.in);
+        System.out.println("Enter username");
+        userName=s.next();
+        System.out.println("Enter Password");
+        password=s.next();
         conn = null;
         p1 = null;
     }
@@ -27,7 +35,7 @@ public class InvSys implements OrderManager, InventoryManager {
     public void addInventory(String location) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(DB_URL, "root", "pass");
+            conn = DriverManager.getConnection(DB_URL, userName, password);
 
             String itemList = "iList" + ListIndex;
             String oList = "oList" + ListIndex;
@@ -63,7 +71,7 @@ public class InvSys implements OrderManager, InventoryManager {
     public void addNewItem(int inventoryID, String itemName, int price, int qty) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(DB_URL, "root", "pass");
+            conn = DriverManager.getConnection(DB_URL, userName, password);
 
             String invName = "";
             String iListName = "";
@@ -105,7 +113,7 @@ public class InvSys implements OrderManager, InventoryManager {
     public void getOrder(int itemID, int orderQty, int inventoryID) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(DB_URL, "root", "pass");
+            conn = DriverManager.getConnection(DB_URL, userName, password);
 
             String sqlGetInvName = "SELECT inv_name,orderlist_name FROM inventories WHERE inv_id=?";
             p1 = conn.prepareStatement(sqlGetInvName);
@@ -207,7 +215,7 @@ public class InvSys implements OrderManager, InventoryManager {
     public void updateQuantity(int itemID, int inventoryID, int upQty) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(DB_URL, "root", "pass");
+            conn = DriverManager.getConnection(DB_URL, userName, password);
 
             String getInvName = "SELECT inv_name FROM inventories WHERE inv_id=?";
             p1 = conn.prepareStatement(getInvName);
@@ -239,7 +247,7 @@ public class InvSys implements OrderManager, InventoryManager {
     public void cancelOrder(int orderID, int inventoryID) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(DB_URL, "root", "pass");
+            conn = DriverManager.getConnection(DB_URL, userName, password);
 
             String getOrderList = ("SELECT orderlist_name,inv_name FROM inventories WHERE inv_id=?");
             p1 = conn.prepareStatement(getOrderList);
@@ -285,8 +293,9 @@ public class InvSys implements OrderManager, InventoryManager {
 
             p1.close();
             conn.close();
-        } catch (Exception e) {
-
+        } catch (ClassNotFoundException e) {}
+        catch (SQLException e){
+            System.out.println("Enter correct values");
         }
 
     }
