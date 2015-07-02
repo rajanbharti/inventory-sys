@@ -47,7 +47,7 @@ public class UserInterface {
         System.out.println("Enter 1 to place order, 2 to cancel, 3 to go back");
 
         try {
-            int choice = Integer.parseInt(s.next());
+            int choice = s.nextInt();
             switch (choice) {
                 case 1:
                     placeOrder();

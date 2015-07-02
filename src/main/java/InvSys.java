@@ -22,13 +22,28 @@ public class InvSys implements OrderManager, InventoryManager {
     String password;
 
     public InvSys() {
-        Scanner s=new Scanner(System.in);
-        System.out.println("Enter username");
-        userName=s.next();
-        System.out.println("Enter Password");
-        password=s.next();
+        authenticate();
         conn = null;
         p1 = null;
+    }
+
+    private void authenticate() {
+        try {
+            Scanner s = new Scanner(System.in);
+            System.out.println("Enter username");
+            userName = s.next();
+            System.out.println("Enter Password");
+            password = s.next();
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            conn = DriverManager.getConnection(DB_URL, userName, password);
+        } catch (SQLException e) {
+            System.out.println("Enter correct user name and password");
+            authenticate();
+        }
     }
 
 
@@ -160,7 +175,6 @@ public class InvSys implements OrderManager, InventoryManager {
                         break;
                     }
                 }
-
             }
             p1.close();
             conn.close();
@@ -293,12 +307,11 @@ public class InvSys implements OrderManager, InventoryManager {
 
             p1.close();
             conn.close();
-        } catch (ClassNotFoundException e) {}
-        catch (SQLException e){
+        } catch (ClassNotFoundException e) {
+        } catch (SQLException e) {
             System.out.println("Enter correct values");
         }
 
     }
-
 
 }
