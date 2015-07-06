@@ -17,6 +17,10 @@ public class UserControl {
     public void start() {
         inv1 = new InvSys();
         s = new Scanner(System.in);
+        displayMenu();
+    }
+
+    private void displayMenu() {
         try {
             System.out.println("Enter your inventory ID(default 1)");
             invId = s.nextInt();
@@ -34,7 +38,7 @@ public class UserControl {
                 case 3:
                     break;
                 default:
-                    start();
+                    displayMenu();
                     break;
             }
         } catch (InputMismatchException e) {
@@ -102,6 +106,7 @@ public class UserControl {
                     break;
                 default:
                     manageInv();
+                    break;
             }
         } catch (InputMismatchException e) {
             System.out.println("Enter number only");
@@ -114,7 +119,6 @@ public class UserControl {
         System.out.println("Enter location");
         String location = s.next();
         inv1.addInventory(location);
-
     }
 
     private void addItem() {
@@ -122,10 +126,7 @@ public class UserControl {
         String name = s.next();
         System.out.println("Enter price");
         int price = s.nextInt();
-        System.out.println("Enter quantity");
-        int qty = s.nextInt();
-        inv1.addNewItem(invId, name, price, qty);
-
+        inv1.addNewItem(invId, name, price);
     }
 
     private void updateQty() {
