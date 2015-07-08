@@ -10,29 +10,31 @@ public class InventoryManager {
 
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost/inventory";
+    static final String userName = "root";
+    static final String password = "pass";
 
     protected Connection conn;
     protected PreparedStatement p1;
-    protected String userName;
-    protected String password;
 
-    protected void authenticate() {
+
+    public int getInventoryCount() {
+        String sqlCheckInv = "SELECT COUNT(*) FROM inv_info;";
+        ResultSet rs;
+        int count = 0;
         try {
-            Scanner s = new Scanner(System.in);
-            System.out.println("Enter username");
-            userName = s.next();
-            System.out.println("Enter Password");
-            password = s.next();
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
+            Class.forName(JDBC_DRIVER);
             conn = DriverManager.getConnection(DB_URL, userName, password);
-        } catch (SQLException e) {
-            System.out.println("Enter correct user name and password");
-            authenticate();
+            p1 = conn.prepareStatement(sqlCheckInv);
+            rs = p1.executeQuery();
+            rs.next();
+            count = rs.getInt("COUNT");
+
+        } catch (Exception e) {
+
         }
+        System.out.println(count);
+        return count;
+
     }
 
     public void addInventory(String location) {
@@ -44,11 +46,11 @@ public class InventoryManager {
             p1.setString(1, location);
             p1.execute();
 
-            String sqlGetInvId="SELECT inv_id FROM inv_list ORDER BY inv_id DESC LIMIT 1";
-            p1=conn.prepareStatement(sqlGetInvId);
-            ResultSet rs=p1.executeQuery();
+            String sqlGetInvId = "SELECT inv_id FROM inv_list ORDER BY inv_id DESC LIMIT 1";
+            p1 = conn.prepareStatement(sqlGetInvId);
+            ResultSet rs = p1.executeQuery();
             rs.next();
-            System.out.println("Inventory ID: "+ rs.getInt("inv_id"));
+            System.out.println("Inventory ID: " + rs.getInt("inv_id"));
             p1.close();
             conn.close();
         } catch (Exception e) {
@@ -56,7 +58,7 @@ public class InventoryManager {
         }
     }
 
-    public void addNewItem(int inventoryId, String itemName, int price) {
+    public void addNewItem(int inventoryId, String itemName, int price, int qty) {
         try {
             Class.forName(JDBC_DRIVER);
             conn = DriverManager.getConnection(DB_URL, userName, password);
@@ -78,7 +80,8 @@ public class InventoryManager {
             p1 = conn.prepareStatement(updateInv);
             p1.setInt(1, inventoryId);
             p1.setInt(2, itemId);
-            p1.setInt(3, 0);
+            p1.setInt(3, qty);
+            p1.execute();
             p1.close();
             conn.close();
 
@@ -94,7 +97,7 @@ public class InventoryManager {
 
             int qty = getQty(itemId, inventoryId);
 
-            String sqlUpdateQty = "INSERT INTO inv_info (qty) VALUES (?) WHERE inv_id=? AND item_id=?";
+            String sqlUpdateQty = "UPDATE inv_info SET qty=? WHERE inv_id=? AND item_id=?";
             p1 = conn.prepareStatement(sqlUpdateQty);
             p1.setInt(1, (qty + upQty));
             p1.setInt(2, inventoryId);
@@ -102,7 +105,16 @@ public class InventoryManager {
             p1.executeUpdate();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            String sqlUpdateNew = "INSERT INTO inv_info (item_id,inv_id,qty) VALUES (?,?,?)";
+            try {
+                p1 = conn.prepareStatement(sqlUpdateNew);
+                p1.setInt(1, itemId);
+                p1.setInt(2, inventoryId);
+                p1.setInt(3, upQty);
+                p1.execute();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 
@@ -113,6 +125,7 @@ public class InventoryManager {
         p1.setInt(2, itemId);
         ResultSet rs = p1.executeQuery();
         rs.next();
-        return rs.getInt("qty");
+        int qty = rs.getInt("qty");
+        return qty;
     }
 }

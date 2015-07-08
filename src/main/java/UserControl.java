@@ -1,9 +1,9 @@
 
+import main.java.InventoryControl;
 
+import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-
-import main.java.InvSys;
 
 /**
  * Created by rajan on 7/1/15.
@@ -12,15 +12,15 @@ public class UserControl {
 
     Scanner s;
     int invId;
-    InvSys inv1;
+    InventoryControl inv1;
 
-    public void start() {
-        inv1 = new InvSys();
+    public void start() throws SQLException {
+        inv1 = new InventoryControl();
         s = new Scanner(System.in);
         displayMenu();
     }
 
-    private void displayMenu() {
+    private void displayMenu() throws SQLException {
         try {
             System.out.println("Enter your inventory ID(default 1)");
             invId = s.nextInt();
@@ -47,7 +47,7 @@ public class UserControl {
         }
     }
 
-    private void manageOrder() {
+    private void manageOrder() throws SQLException {
         System.out.println("Enter 1 to place order, 2 to cancel, 3 to go back");
 
         try {
@@ -69,16 +69,16 @@ public class UserControl {
             System.out.println("Enter number");
             manageOrder();
         }
-
         manageOrder();
     }
 
-    private void placeOrder() {
+    private void placeOrder() throws SQLException {
         System.out.println("Enter Item ID");
         int itemID = s.nextInt();
         System.out.println("Enter quantity");
         int qty = s.nextInt();
         inv1.getOrder(itemID, qty, invId);
+
     }
 
     private void cancelOrder() {
@@ -87,7 +87,7 @@ public class UserControl {
         inv1.cancelOrder(orderId, invId);
     }
 
-    private void manageInv() {
+    private void manageInv() throws SQLException {
         System.out.println("Enter 1 to add inventory, 2 to add new item, 3 to update quantity, 4 to go back");
         try {
             int choice = s.nextInt();
@@ -126,7 +126,9 @@ public class UserControl {
         String name = s.next();
         System.out.println("Enter price");
         int price = s.nextInt();
-        inv1.addNewItem(invId, name, price);
+        System.out.println("Enter quantity");
+        int qty = s.nextInt();
+        inv1.addNewItem(invId, name, price, qty);
     }
 
     private void updateQty() {
