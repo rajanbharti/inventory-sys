@@ -1,4 +1,4 @@
-# inventory-sys
+# inventory-system
 
 mplementation of basic Inventory management system
 
